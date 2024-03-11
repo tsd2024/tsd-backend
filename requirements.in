@@ -1,0 +1,14 @@
+python-dotenv
+dependency-injector
+sqlalchemy[asyncio]
+asyncpg
+devtools
+alembic
+pytest
+pytest-mock
+pytest-asyncio
+asynctest
+pydantic-yaml
+pydantic-settings
+fastapi
+uvicorn

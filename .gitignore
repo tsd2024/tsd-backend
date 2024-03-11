@@ -1,0 +1,8 @@
+.env
+.idea/
+__pycache__/
+docker-compose.yml
+docker-compose-test.yml
+requirements.txt
+requirements.env
+temp_requirements.in
