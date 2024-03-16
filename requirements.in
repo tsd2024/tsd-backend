@@ -2,6 +2,8 @@ python-dotenv
 dependency-injector
 sqlalchemy[asyncio]
 asyncpg
+psycopg2
+sqlalchemy
 devtools
 alembic
 pytest

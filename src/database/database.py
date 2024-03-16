@@ -1,43 +1,40 @@
-from contextlib import AbstractAsyncContextManager, asynccontextmanager
+from contextlib import contextmanager, AbstractContextManager
 from typing import Callable
 
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+from sqlalchemy import create_engine, orm
+from sqlalchemy.orm import Session
 
 from src.database.model import Base
 
-SessionFactory = Callable[..., AbstractAsyncContextManager[AsyncSession]]
+SessionFactory = Callable[..., AbstractContextManager[Session]]
 
 
 class Database:
 
     def __init__(self, db_url: str) -> None:
-        self._engine = create_async_engine(db_url, echo=False)
-        self._session_factory = async_sessionmaker(
-            bind=self._engine,
-            autocommit=False,
-            autoflush=False,
-            expire_on_commit=False
+        self._engine = create_engine(db_url, echo=False)
+        self._session_factory = orm.scoped_session(
+            orm.sessionmaker(
+                autocommit=False,
+                autoflush=False,
+                bind=self._engine,
+            ),
         )
 
-    async def create_database(self) -> None:
-        async with self._engine.begin() as conn:
-            await conn.run_sync(Base.metadata.create_all)
+    def create_database(self) -> None:
+        Base.metadata.create_all(self._engine)
 
-    async def close(self) -> None:
-        await self._engine.dispose()
+    def remove_database(self):
+        Base.metadata.drop_all(self._engine)
 
-    async def remove_database(self):
-        async with self._engine.begin() as conn:
-            await conn.run_sync(Base.metadata.drop_all)
-
-    @asynccontextmanager
-    async def session(self) -> SessionFactory:
+    @contextmanager
+    def session(self) -> Callable[..., AbstractContextManager[Session]]:
+        session: Session = self._session_factory()
         try:
-            async with self._session_factory() as session:
-                yield session
-        except Exception as e:
-            print(f"Session rollback because of exception {e}")
-            await session.rollback()
+            yield session
+        except Exception:
+            print("Session rollback because of exception")
+            session.rollback()
             raise
         finally:
-            await session.close()
+            session.close()
