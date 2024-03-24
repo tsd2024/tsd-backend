@@ -36,10 +36,13 @@ jobs:
           ECR_REPOSITORY: tsd-project
         run: |
           docker build -t tsd-project/fastapi -f ./docker/fastapi/Dockerfile ./docker/fastapi
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY/fastapi:latest
+          docker tag tsd-project/fastapi:latest $ECR_REGISTRY/tsd-project/fastapi:latest
+          docker push tsd-project/fastapi:latest
 
           docker build -t tsd-project/postgres -f ./docker/postgres/Dockerfile ./docker/postgres
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY/postgres:latest
+          docker tag tsd-project/postgres:latest $ECR_REGISTRY/tsd-project/postgres:latest
+          docker push tsd-project/postgres:latest
 
           docker build -t tsd-project/redis -f ./docker/redis/Dockerfile ./docker/redis
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY/redis:latestv
+          docker tag tsd-project/redis:latest $ECR_REGISTRY/tsd-project/redis:latest
+          docker push tsd-project/redis:latest
