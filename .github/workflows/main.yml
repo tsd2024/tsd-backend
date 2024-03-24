@@ -35,7 +35,7 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: tsd-project
         run: |
-          docker build -t tsd-project/fastapi -f ./docker/fastapi/Dockerfile ./docker/fastapi
+          docker build -t tsd-project/fastapi -f ./docker/fastapi/Dockerfile .
           docker tag tsd-project/fastapi:latest $ECR_REGISTRY/tsd-project/fastapi:latest
           docker push $ECR_REGISTRY/tsd-project/fastapi:latest
 
