@@ -37,12 +37,12 @@ jobs:
         run: |
           docker build -t tsd-project/fastapi -f ./docker/fastapi/Dockerfile ./docker/fastapi
           docker tag tsd-project/fastapi:latest $ECR_REGISTRY/tsd-project/fastapi:latest
-          docker push tsd-project/fastapi:latest
+          docker push $ECR_REGISTRY/tsd-project/fastapi:latest
 
           docker build -t tsd-project/postgres -f ./docker/postgres/Dockerfile ./docker/postgres
           docker tag tsd-project/postgres:latest $ECR_REGISTRY/tsd-project/postgres:latest
-          docker push tsd-project/postgres:latest
+          docker push $ECR_REGISTRY/tsd-project/postgres:latest
 
           docker build -t tsd-project/redis -f ./docker/redis/Dockerfile ./docker/redis
           docker tag tsd-project/redis:latest $ECR_REGISTRY/tsd-project/redis:latest
-          docker push tsd-project/redis:latest
+          docker push $ECR_REGISTRY/tsd-project/redis:latest
