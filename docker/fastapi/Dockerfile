@@ -6,9 +6,9 @@ ENV PYTHONDONTWRITEBYTECODE=1
 
 
 WORKDIR /run
-COPY ../../. /run
+COPY . /run
 
-COPY requirements.txt requirements.txt
+COPY ./docker/fastapi/requirements.txt requirements.txt
 RUN pip install --no-cache-dir --upgrade pip  \
     && pip install --no-cache-dir -r requirements.txt
 RUN pip install pytest
