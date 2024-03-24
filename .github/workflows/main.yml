@@ -46,3 +46,14 @@ jobs:
           docker build -t tsd-project/redis -f ./docker/redis/Dockerfile ./docker/redis
           docker tag tsd-project/redis:latest $ECR_REGISTRY/tsd-project/redis:latest
           docker push $ECR_REGISTRY/tsd-project/redis:latest
+
+      - name: Run command on EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ vars.EC2_HOST }}
+          username: ${{ vars.EC2_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            echo test
+            pwd

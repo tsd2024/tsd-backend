@@ -1,0 +1,49 @@
+version: "3.6"
+
+services:
+  postgres:
+    restart: unless-stopped
+    image: ${REGISTRY_NAME}/postgres:latest
+    volumes:
+      - "postgres:/var/lib/postgresql/data"
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    expose:
+      - "5432"
+    ports:
+      - "5432:5432"
+    networks:
+      - mynetwork
+
+  fastapi:
+    image: ${REGISTRY_NAME}/fastapi:latest
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+        - "8009:80"
+    tty:
+        true
+    networks:
+      - mynetwork
+
+  redis:
+    restart: unless-stopped
+    image: ${REGISTRY_NAME}/redis:latest
+    expose:
+      - "6379"
+    ports:
+      - "6379:6379"
+    networks:
+      - mynetwork
+
+
+networks:
+  mynetwork:
+    driver: bridge
+
+volumes:
+  postgres:
