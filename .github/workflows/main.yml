@@ -55,5 +55,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            echo test
-            pwd
+            source /home/ubuntu/tsd-project/setup.sh
+            sudo docker-compose -f /home/ubuntu/tsd-project/docker-compose.yml down
+            sudo docker-compose -f /home/ubuntu/tsd-project/docker-compose.yml pull
+            sudo docker-compose -f /home/ubuntu/tsd-project/docker-compose.yml up -d

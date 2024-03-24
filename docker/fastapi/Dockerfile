@@ -6,7 +6,7 @@ ENV PYTHONDONTWRITEBYTECODE=1
 
 
 WORKDIR /run
-COPY . /run
+COPY ../../. /run
 
 COPY requirements.txt requirements.txt
 RUN pip install --no-cache-dir --upgrade pip  \
