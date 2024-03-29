@@ -13,4 +13,4 @@ asynctest
 pydantic-yaml
 pydantic-settings
 fastapi
-uvicorn
+uvicorn[standard]
