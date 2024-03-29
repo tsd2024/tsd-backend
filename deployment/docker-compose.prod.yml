@@ -40,6 +40,17 @@ services:
     networks:
       - mynetwork
 
+  nginx:
+    restart: unless-stopped
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - fastapi
+    networks:
+      - mynetwork
 
 networks:
   mynetwork:

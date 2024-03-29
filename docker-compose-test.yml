@@ -1,0 +1,54 @@
+version: "3.6"
+
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: ./docker/fastapi/Dockerfile
+    image: ${APP_NAME}-fastapi:latest
+    container_name: test-${APP_NAME}-fastapi
+    volumes:
+      - .:/run
+    depends_on:
+      - postgres
+      - redis
+    env_file:
+      - '.env'
+    working_dir: /run
+    networks:
+      - mynetwork
+    tty:
+        true
+
+  postgres:
+    restart: unless-stopped
+    build:
+      context: ./docker/postgres
+      dockerfile: Dockerfile
+    image: ${APP_NAME}-postgres:latest
+    container_name: test-${APP_NAME}-postgres
+    environment:
+      - POSTGRES_PASSWORD=secret
+    ports:
+        - "5433:5432"
+    networks:
+      - mynetwork
+
+  redis:
+    restart: unless-stopped
+    build:
+      context: ./docker/redis
+      dockerfile: Dockerfile
+    image: ${APP_NAME}-redis:latest
+    container_name: test-${APP_NAME}-redis
+    expose:
+      - "6379"
+    ports:
+      - "6379:6379"
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge

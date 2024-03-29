@@ -20,8 +20,8 @@ services:
 
   fastapi:
     build:
-      context: ./docker/fastapi
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./docker/fastapi/Dockerfile
     image: ${APP_NAME}-fastapi:latest
     volumes:
       - .:/run
