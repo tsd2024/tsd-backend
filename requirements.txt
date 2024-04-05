@@ -18,6 +18,12 @@ asyncpg==0.29.0
     # via -r /run/requirements.in
 asynctest==0.13.0
     # via -r /run/requirements.in
+cachetools==5.3.3
+    # via google-auth
+certifi==2024.2.2
+    # via requests
+charset-normalizer==3.3.2
+    # via requests
 click==8.1.7
     # via uvicorn
 dependency-injector==4.41.0
@@ -32,13 +38,17 @@ executing==2.0.1
     # via devtools
 fastapi==0.110.0
     # via -r /run/requirements.in
+google-auth==2.6.0
+    # via -r /run/requirements.in
 greenlet==3.0.3
     # via sqlalchemy
 h11==0.14.0
     # via uvicorn
 idna==3.6
-    # via anyio
-importlib-metadata==7.0.2
+    # via
+    #   anyio
+    #   requests
+importlib-metadata==7.1.0
     # via pydantic-yaml
 iniconfig==2.0.0
     # via pytest
@@ -52,6 +62,12 @@ pluggy==1.4.0
     # via pytest
 psycopg2==2.9.9
     # via -r /run/requirements.in
+pyasn1==0.6.0
+    # via
+    #   pyasn1-modules
+    #   rsa
+pyasn1-modules==0.4.0
+    # via google-auth
 pydantic==2.6.4
     # via
     #   fastapi
@@ -78,6 +94,13 @@ python-dotenv==1.0.1
     # via
     #   -r /run/requirements.in
     #   pydantic-settings
+    #   uvicorn
+pyyaml==6.0.1
+    # via uvicorn
+requests==2.31.0
+    # via -r /run/requirements.in
+rsa==4.9
+    # via google-auth
 ruamel-yaml==0.18.6
     # via pydantic-yaml
 ruamel-yaml-clib==0.2.8
@@ -86,6 +109,7 @@ six==1.16.0
     # via
     #   asttokens
     #   dependency-injector
+    #   google-auth
 sniffio==1.3.1
     # via anyio
 sqlalchemy[asyncio]==2.0.28
@@ -106,7 +130,9 @@ typing-extensions==4.10.0
     #   pydantic-yaml
     #   sqlalchemy
     #   uvicorn
-uvicorn==0.28.0
+urllib3==2.2.1
+    # via requests
+uvicorn[standard]==0.29.0
     # via -r /run/requirements.in
 zipp==3.18.1
     # via importlib-metadata
