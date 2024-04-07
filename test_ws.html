@@ -13,7 +13,7 @@
 
                 // Retrieve the action and value from the form
                 var action = document.getElementById("actionInput").value;
-                var value = document.getElementById("valueInput").value;
+                var value = JSON.parse(document.getElementById("valueInput").value); // Parse the value as JSON
 
                 // Send the action and value as a JSON object to the server
                 ws.send(JSON.stringify({ action: action, value: value }));
