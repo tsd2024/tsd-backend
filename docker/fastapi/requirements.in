@@ -14,3 +14,4 @@ pydantic-yaml
 pydantic-settings
 fastapi
 uvicorn[standard]
+redis

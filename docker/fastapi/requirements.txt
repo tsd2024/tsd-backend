@@ -15,7 +15,9 @@ anyio==4.3.0
 asttokens==2.4.1
     # via devtools
 async-timeout==4.0.3
-    # via asyncpg
+    # via
+    #   asyncpg
+    #   redis
 asyncpg==0.29.0
     # via -r /run/requirements.in
 asynctest==0.13.0
@@ -32,7 +34,7 @@ exceptiongroup==1.2.0
     #   pytest
 executing==2.0.1
     # via devtools
-fastapi==0.110.0
+fastapi==0.110.1
     # via -r /run/requirements.in
 greenlet==3.0.3
     # via sqlalchemy
@@ -65,7 +67,7 @@ pydantic-core==2.16.3
     # via pydantic
 pydantic-settings==2.2.1
     # via -r /run/requirements.in
-pydantic-yaml==1.2.1
+pydantic-yaml==1.3.0
     # via -r /run/requirements.in
 pygments==2.17.2
     # via devtools
@@ -85,6 +87,8 @@ python-dotenv==1.0.1
     #   uvicorn
 pyyaml==6.0.1
     # via uvicorn
+redis==5.0.3
+    # via -r /run/requirements.in
 ruamel-yaml==0.18.6
     # via pydantic-yaml
 ruamel-yaml-clib==0.2.8
@@ -99,11 +103,11 @@ sqlalchemy[asyncio]==2.0.29
     # via
     #   -r /run/requirements.in
     #   alembic
-starlette==0.36.3
+starlette==0.37.2
     # via fastapi
 tomli==2.0.1
     # via pytest
-typing-extensions==4.10.0
+typing-extensions==4.11.0
     # via
     #   alembic
     #   anyio
