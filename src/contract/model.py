@@ -12,4 +12,4 @@ class ActionType(Enum):
 
 class Packet(BaseModel):
     action: ActionType
-    value: str
+    value: dict
