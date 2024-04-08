@@ -17,3 +17,10 @@ def get_redis_record_template():
             }
         ]
     }
+
+def get_player_template():
+    return {
+        'player_id': None,
+        'choose_cards': [],
+        'choice_made': False,
+    }
