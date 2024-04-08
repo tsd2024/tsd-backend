@@ -31,6 +31,7 @@ services:
     environment:
       - DATABASE_URL=${DATABASE_URL}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - REDIS_CONNECTION_STRING=${REDIS_CONNECTION_STRING}
     working_dir: /run
     ports:
         - "8009:80"
