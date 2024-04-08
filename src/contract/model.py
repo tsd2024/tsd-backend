@@ -6,6 +6,7 @@ from pydantic import BaseModel
 class ActionType(Enum):
     CREATE = "create"
     JOIN = "join"
+    PLAY_CARD = "play_card"
 
 
 
