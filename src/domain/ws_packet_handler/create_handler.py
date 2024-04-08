@@ -20,13 +20,13 @@ class CreateHandler(PacketHandler):
 
         value = get_redis_record_template()
 
-        max_players = packet.value.get('max_players', 5)  # Default to 5 if not provided
+        max_players = packet.value.get('max_players', 5)
         value['lobby_metadata']['max_players'] = max_players
 
-        number_of_rounds = packet.value.get('number_of_rounds', 5)  # Default to 5 if not provided
+        number_of_rounds = packet.value.get('number_of_rounds', 5)
         value['lobby_metadata']['number_of_rounds'] = number_of_rounds
 
-        lobby_name = packet.value.get('lobby_name', "")  # Default to empty string if not provided
+        lobby_name = packet.value.get('lobby_name', "")
         value['lobby_metadata']['lobby_name'] = lobby_name
 
         admin_id = packet.value.get('admin_id', None)

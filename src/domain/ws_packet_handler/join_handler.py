@@ -1,11 +1,8 @@
-import json
-import uuid
-import random
+
 
 from starlette.websockets import WebSocket
 
 from src.contract.model import Packet
-from src.domain.redis_connector.record import get_redis_record_template, get_player_template
 from src.domain.redis_connector.redis_handler import RedisHandler
 from src.domain.ws_packet_handler.packet_handler import PacketHandler
 
@@ -13,23 +10,32 @@ from src.domain.ws_packet_handler.packet_handler import PacketHandler
 class NoPlayerIdException(Exception):
     pass
 
+class NoLobbyIdException(Exception):
+    pass
+
 class JoinHandler(PacketHandler):
 
     async def handle_packet(self, packet: Packet, websocket: WebSocket, redis_handler: RedisHandler) -> None:
         print(f"JoinHandler: {packet}")
 
-        # get redis record to update, for now it is just a template.
-        value = get_player_template()
-
         player_id = packet.value.get('player_id', None)
+        lobby_id = packet.value.get('lobby_id', None)
         if player_id is None:
-            raise NoPlayerIdException("player_id cannot be None")
-        value['player_id'] = player_id
+            await websocket.send_json({
+                "action": "join_failed",
+                "reason": "player_id cannot be None"
+            })
+            return
+        if lobby_id is None:
+            await websocket.send_json({
+                "action": "join_failed",
+                "reason": "lobby_id cannot be None"
+            })
+            return
 
 
-        redis_handler.upload_record(str(player_id), value)
+        redis_handler.join_lobby(lobby_id, player_id)
         await websocket.send_json({
-            "action": "join",
-            "player_id": str(player_id)
+            "action": "join_success",
         })
 
