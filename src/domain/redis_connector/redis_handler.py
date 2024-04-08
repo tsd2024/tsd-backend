@@ -1,14 +1,15 @@
 import json
 
 import redis
-import threading
 
-from src.contract.exceptions import LobbyNotFoundException, CardNotAvailableException, PlayerNotFoundException
-
+from src.contract.exceptions import LobbyNotFoundException, CardNotAvailableException, PlayerNotFoundException, \
+    RevealNotReadyException, NotAdminException
 
 
 class MaxPlayersReachedException(Exception):
     pass
+
+
 class RedisHandler:
     def __init__(self, connection_string):
         self.connection_string = connection_string
@@ -17,7 +18,6 @@ class RedisHandler:
     def upload_record(self, key, value):
         json_template = json.dumps(value)
         self.redis_client.set(key, json_template)
-
 
     def join_lobby(self, lobby_key, player_id):
         pipe = self.redis_client.pipeline()
@@ -72,6 +72,32 @@ class RedisHandler:
             finally:
                 pipe.unwatch()
 
+    def reveal_cards(self, lobby_key, player_id):
+        pipe = self.redis_client.pipeline()
+        while True:
+            try:
+                pipe.watch(lobby_key)
+                lobby_data = pipe.get(lobby_key)
+                if not lobby_data:
+                    raise LobbyNotFoundException("Lobby not found")
+                lobby_data = json.loads(lobby_data.decode())
+                admin_id = lobby_data['lobby_metadata']['admin_id']
+                if player_id != admin_id:
+                    raise NotAdminException("Only admin can reveal cards")
+                players = lobby_data['players']
+                all_choices_made = all(player['choice_made'] for player in players)
+                if all_choices_made:
+                    lobby_data['lobby_metadata']['reveal_cards'] = True
+                    pipe.multi()
+                    pipe.set(lobby_key, json.dumps(lobby_data))
+                    pipe.execute()
+                    return lobby_data
+                else:
+                    raise RevealNotReadyException("Not all players have made their choice")
+            except redis.WatchError:
+                continue
+            finally:
+                pipe.unwatch()
+
     def get_record(self, key):
         return self.redis_client.get(key)
-
