@@ -15,20 +15,6 @@ class RedisHandler:
         json_template = json.dumps(value)
         self.redis_client.set(key, json_template)
 
-    def modify_record(self, key, field, new_value):
-        pipe = self.redis_client.pipeline()
-        while True:
-            try:
-                pipe.watch(key)
-                current_value = pipe.hget(key, field)
-                pipe.multi()
-                pipe.hset(key, field, new_value)
-                pipe.execute()
-                break
-            except redis.WatchError:
-                continue
-            finally:
-                pipe.unwatch()
 
     def join_lobby(self, lobby_key, player_id):
         pipe = self.redis_client.pipeline()
