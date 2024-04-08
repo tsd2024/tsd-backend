@@ -8,6 +8,7 @@ def get_redis_record_template():
             'round_number': 1,
             'available_cards': [1, 2, 3, 5, 8, 13, 21],
             'lobby_name': "",
+            'reveal_cards': False,
         },
         'players': [
             {

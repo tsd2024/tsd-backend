@@ -7,6 +7,7 @@ class ActionType(Enum):
     CREATE = "create"
     JOIN = "join"
     PLAY_CARD = "play_card"
+    REVEAL = "reveal"
 
 
 
