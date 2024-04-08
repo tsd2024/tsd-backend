@@ -3,6 +3,9 @@ import json
 import redis
 import threading
 
+
+class MaxPlayersReachedException(Exception):
+    pass
 class RedisHandler:
     def __init__(self, connection_string):
         self.connection_string = connection_string
@@ -39,7 +42,7 @@ class RedisHandler:
                 max_players = lobby_data['lobby_metadata']['max_players']
                 players = lobby_data['players']
                 if len(players) >= max_players:
-                    raise ValueError("Lobby is full")
+                    raise MaxPlayersReachedException("Lobby is full")
                 players.append({
                     'player_id': player_id,
                     'choose_cards': [],
