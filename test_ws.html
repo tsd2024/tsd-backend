@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Test</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var ws = new WebSocket("ws://localhost:8009/api/v1/room");
+
+            document.getElementById("messageForm").addEventListener("submit", function(event) {
+                event.preventDefault(); // Prevent the form from submitting traditionally
+
+                // Retrieve the action and value from the form
+                var action = document.getElementById("actionInput").value;
+                var value = JSON.parse(document.getElementById("valueInput").value); // Parse the value as JSON
+
+                // Send the action and value as a JSON object to the server
+                ws.send(JSON.stringify({ action: action, value: value }));
+
+                // Optionally, clear the input fields after sending
+                document.getElementById("actionInput").value = '';
+                document.getElementById("valueInput").value = '';
+            });
+
+            ws.onmessage = function(event) {
+                console.log("Message from server:", event.data);
+            };
+
+            ws.onerror = function(event) {
+                console.error("WebSocket error:", event);
+            };
+
+            ws.onclose = function(event) {
+                console.log("WebSocket connection closed:", event);
+            };
+        });
+    </script>
+</head>
+<body>
+    <h2>WebSocket Message Sender</h2>
+    <form id="messageForm">
+        <input type="text" id="actionInput" placeholder="Action" required>
+        <input type="text" id="valueInput" placeholder="Value" required>
+        <button type="submit">Send Message</button>
+    </form>
+</body>
+</html>
