@@ -9,7 +9,8 @@ from src.domain.redis_connector.record import get_redis_record_template
 from src.domain.redis_connector.redis_handler import RedisHandler
 from src.domain.ws_packet_handler.packet_handler import PacketHandler
 
-
+class NoAdminIdException(Exception):
+    pass
 class CreateHandler(PacketHandler):
 
     async def handle_packet(self, packet: Packet, websocket: WebSocket, redis_handler: RedisHandler) -> None:
@@ -19,16 +20,18 @@ class CreateHandler(PacketHandler):
 
         value = get_redis_record_template()
 
-        max_players = packet.value.get('max_players', 5)  # Default to 5 if not provided
+        max_players = packet.value.get('max_players', 5)
         value['lobby_metadata']['max_players'] = max_players
 
-        number_of_rounds = packet.value.get('number_of_rounds', 5)  # Default to 5 if not provided
+        number_of_rounds = packet.value.get('number_of_rounds', 5)
         value['lobby_metadata']['number_of_rounds'] = number_of_rounds
 
-        lobby_name = packet.value.get('lobby_name', "")  # Default to empty string if not provided
+        lobby_name = packet.value.get('lobby_name', "")
         value['lobby_metadata']['lobby_name'] = lobby_name
 
         admin_id = packet.value.get('admin_id', None)
+        if admin_id is None:
+            raise NoAdminIdException("admin_id cannot be None.")
         value['lobby_metadata']['admin_id'] = admin_id
         value['players'][0]['player_id'] = admin_id
 

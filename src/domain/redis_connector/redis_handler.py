@@ -27,6 +27,33 @@ class RedisHandler:
             finally:
                 pipe.unwatch()
 
+    def join_lobby(self, lobby_key, player_id):
+        pipe = self.redis_client.pipeline()
+        while True:
+            try:
+                pipe.watch(lobby_key)
+                lobby_data = pipe.get(lobby_key)
+                if not lobby_data:
+                    raise ValueError("Lobby not found")
+                lobby_data = json.loads(lobby_data.decode())
+                max_players = lobby_data['lobby_metadata']['max_players']
+                players = lobby_data['players']
+                if len(players) >= max_players:
+                    raise ValueError("Lobby is full")
+                players.append({
+                    'player_id': player_id,
+                    'choose_cards': [],
+                    'choice_made': False,
+                })
+                pipe.multi()
+                pipe.set(lobby_key, json.dumps(lobby_data))
+                pipe.execute()
+                return lobby_data
+            except redis.WatchError:
+                continue
+            finally:
+                pipe.unwatch()
+
     def get_record(self, key):
         return self.redis_client.get(key)
 
