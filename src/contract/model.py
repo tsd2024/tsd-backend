@@ -10,8 +10,11 @@ class ActionType(Enum):
     REVEAL = "reveal"
 
 
-
-
 class Packet(BaseModel):
     action: ActionType
     value: dict
+
+
+class Player(BaseModel):
+    player_id: str
+    lobby_key: str

@@ -4,7 +4,7 @@ import random
 
 from starlette.websockets import WebSocket
 
-from src.contract.model import Packet
+from src.contract.model import Packet, Player
 from src.domain.redis_connector.record import get_redis_record_template
 from src.domain.redis_connector.redis_handler import RedisHandler
 from src.domain.ws_packet_handler.packet_handler import PacketHandler
@@ -13,10 +13,10 @@ class NoAdminIdException(Exception):
     pass
 class CreateHandler(PacketHandler):
 
-    async def handle_packet(self, packet: Packet, websocket: WebSocket, redis_handler: RedisHandler) -> None:
+    async def handle_packet(self, packet: Packet, websocket: WebSocket, redis_handler: RedisHandler) -> None | Player:
         print(f"CreateHandler: {packet}")
 
-        lobby_id = generate_unique_id()
+        lobby_key = generate_unique_id()
 
         value = get_redis_record_template()
 
@@ -57,13 +57,17 @@ class CreateHandler(PacketHandler):
         value['lobby_metadata']['admin_id'] = admin_id
         value['players'][0]['player_id'] = admin_id
 
-        redis_handler.upload_record(str(lobby_id), value)
+        redis_handler.upload_record(str(lobby_key), value)
         await websocket.send_json({
             "action": "create",
-            "lobby_id": str(lobby_id),
+            "lobby_id": str(lobby_key),
             "lobby_name": lobby_name,
             "admin_id": str(admin_id)
         })
+        return Player(
+            player_id=str(admin_id),
+            lobby_key=lobby_key
+        )
 
 def generate_unique_id():
     return '-'.join(str(random.randint(100, 999)) for _ in range(2))
