@@ -6,6 +6,8 @@ from src.contract.model import Packet
 from src.domain.redis_connector.redis_handler import RedisHandler
 from src.domain.ws_packet_handler.packet_handler import PacketHandler
 
+from src.domain.redis_connector.redis_handler import MaxPlayersReachedException
+
 
 class NoPlayerIdException(Exception):
     pass
@@ -34,7 +36,14 @@ class JoinHandler(PacketHandler):
             return
 
 
-        redis_handler.join_lobby(lobby_id, player_id)
+        try:
+            redis_handler.join_lobby(lobby_id, player_id)
+        except MaxPlayersReachedException as e:
+            await websocket.send_json({
+                "action": "join_failed",
+                "reason": "max players reached",
+            })
+            return
         await websocket.send_json({
             "action": "join_success",
         })
