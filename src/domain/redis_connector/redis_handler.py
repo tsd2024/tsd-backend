@@ -3,7 +3,7 @@ import json
 import redis
 
 from src.contract.exceptions import LobbyNotFoundException, CardNotAvailableException, PlayerNotFoundException, \
-    RevealNotReadyException, NotAdminException
+    RevealNotReadyException, NotAdminException, CancelNotAvailableException
 
 
 class MaxPlayersReachedException(Exception):
@@ -143,6 +143,36 @@ class RedisHandler:
                     game_status['players'].append(player_info)
 
                 return game_status
+            except redis.WatchError:
+                continue
+            finally:
+                pipe.unwatch()
+
+    def cancel_choice(self, lobby_key, player_id):
+        pipe = self.redis_client.pipeline()
+        while True:
+            try:
+                pipe.watch(lobby_key)
+                lobby_data = pipe.get(lobby_key)
+                if not lobby_data:
+                    raise LobbyNotFoundException("Lobby not found")
+                lobby_data = json.loads(lobby_data.decode())
+                players = lobby_data['players']
+                reveal_cards = lobby_data['lobby_metadata'].get('reveal_cards', False)
+
+                for player in players:
+                    if player['player_id'] == player_id:
+                        if player['choice_made'] and not reveal_cards:
+                            player['choice_made'] = False
+                            pipe.multi()
+                            pipe.set(lobby_key, json.dumps(lobby_data))
+                            pipe.execute()
+                            return True
+                        else:
+                            raise CancelNotAvailableException("Cancellation not allowed under current conditions")
+
+                raise PlayerNotFoundException("Player not found in the lobby")
+
             except redis.WatchError:
                 continue
             finally:

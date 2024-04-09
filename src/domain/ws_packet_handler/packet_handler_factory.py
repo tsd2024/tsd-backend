@@ -1,4 +1,5 @@
 from src.contract.model import ActionType
+from src.domain.ws_packet_handler.cancel_handler import CancelHandler
 from src.domain.ws_packet_handler.create_handler import CreateHandler
 from src.domain.ws_packet_handler.packet_handler import PacketHandler
 from src.domain.ws_packet_handler.join_handler import JoinHandler
@@ -12,6 +13,7 @@ class PacketHandlerFactory:
         ActionType.JOIN: JoinHandler,
         ActionType.PLAY_CARD: PlayCardHandler,
         ActionType.REVEAL: RevealHandler,
+        ActionType.CANCEL: CancelHandler,
     }
 
     def get_handler(self, action_type: ActionType) -> PacketHandler:
