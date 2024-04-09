@@ -8,6 +8,7 @@ class ActionType(Enum):
     JOIN = "join"
     PLAY_CARD = "play_card"
     REVEAL = "reveal"
+    CANCEL = "cancel"
 
 
 class Packet(BaseModel):

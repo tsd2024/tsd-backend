@@ -16,3 +16,7 @@ class RevealNotReadyException(Exception):
 
 class NotAdminException(Exception):
     pass
+
+
+class CancelNotAvailableException(Exception):
+    pass
