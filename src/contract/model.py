@@ -19,3 +19,9 @@ class Packet(BaseModel):
 class Player(BaseModel):
     player_id: str
     lobby_key: str
+
+
+class BasicLobbyInfo(BaseModel):
+    lobby_id: str
+    lobby_name: str
+    admin_id: str
