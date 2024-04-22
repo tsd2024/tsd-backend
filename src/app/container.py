@@ -4,6 +4,7 @@ from src.database.database import Database
 from src.domain.redis_connector.redis_handler import RedisHandler
 from src.domain.ws_lobby_state.lobby_state_getter import LobbyStateGetter
 from src.domain.ws_packet_handler.packet_handler_factory import PacketHandlerFactory
+from src.usecase.create_lobby import CreateLobbyUseCase
 
 
 class Container(containers.DeclarativeContainer):
@@ -22,4 +23,9 @@ class Container(containers.DeclarativeContainer):
 
     lobby_state_getter = providers.Singleton(
         LobbyStateGetter
+    )
+
+    create_lobby_use_case = providers.Singleton(
+        CreateLobbyUseCase,
+        redis_handler=redis_handler
     )
