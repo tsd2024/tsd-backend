@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from src.app.controller.dummy import router as dummy_router
 from src.app.controller.websocket import api as websocket_api
 from src.app.controller.create_lobby import api as create_lobby_api
+from src.app.controller.google_auth import api as google_auth_api
 
 
 def _v1() -> APIRouter:
@@ -9,6 +10,7 @@ def _v1() -> APIRouter:
     api.include_router(dummy_router)
     api.include_router(websocket_api)
     api.include_router(create_lobby_api)
+    api.include_router(google_auth_api)
     return api
 
 

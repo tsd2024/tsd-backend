@@ -15,3 +15,5 @@ pydantic-settings
 fastapi
 uvicorn[standard]
 redis
+google-auth
+requests

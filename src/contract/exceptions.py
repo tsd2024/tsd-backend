@@ -20,3 +20,9 @@ class NotAdminException(Exception):
 
 class CancelNotAvailableException(Exception):
     pass
+
+class MissingTokenException(Exception):
+    pass
+
+class InvalidTokenException(Exception):
+    pass
