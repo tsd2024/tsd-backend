@@ -116,16 +116,22 @@ class RedisHandler:
                 lobby_data = json.loads(lobby_data.decode())
                 reveal_cards = lobby_data['lobby_metadata'].get('reveal_cards', False)
                 players = lobby_data['players']
+                user_stories = lobby_data.get('user_stories', [])
+                number_of_rounds = lobby_data['lobby_metadata']['number_of_rounds']
+                round_number = lobby_data['lobby_metadata']['round_number']
 
                 num_players = len(players)
 
-                round_number = lobby_data['lobby_metadata']['round_number']
+                current_user_story_id = user_stories[round_number - 1]['story_id'] if user_stories else None
 
                 game_status = {
                     'num_players': num_players,
                     'reveal_ready': reveal_cards,
                     'round_number': round_number,
-                    'players': []
+                    'number_of_rounds': number_of_rounds,
+                    'current_user_story_id': current_user_story_id,
+                    'players': [],
+                    'user_stories': user_stories
                 }
 
                 for player in players:
