@@ -11,7 +11,7 @@ from src.usecase.stories_tickets.add_story import AddStoryUseCase
 api = APIRouter()
 
 
-@api.post("/update")
+@api.post("/add")
 @inject
 async def add_story(
         request: AddStoryRequest,
