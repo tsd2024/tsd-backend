@@ -4,6 +4,6 @@ from src.contract.model import Ticket
 
 
 class AddStoryRequest(BaseModel):
+    lobby_id: str
     story_name: str
-    story_description: str
     tickets: list[Ticket]

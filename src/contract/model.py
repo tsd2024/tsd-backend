@@ -1,3 +1,4 @@
+import uuid
 from enum import Enum
 
 from pydantic import BaseModel
@@ -29,12 +30,11 @@ class BasicLobbyInfo(BaseModel):
 
 
 class Ticket(BaseModel):
-    ticket_id: str
     ticket_name: str
 
 
 class Story(BaseModel):
     story_id: str
     story_name: str
-    story_description: str
+    story_points: int
     tickets: list[Ticket]

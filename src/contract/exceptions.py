@@ -28,3 +28,7 @@ class NextRoundNotReadyException(Exception):
 
 class MaxRoundsReachedException(Exception):
     pass
+
+
+class MaxUserStoriesReachedException(Exception):
+    pass
