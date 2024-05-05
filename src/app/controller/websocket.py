@@ -23,7 +23,7 @@ async def websocket_endpoint(
     player_id = None
     while True:
         try:
-            data = await asyncio.wait_for(websocket.receive_json(), timeout=0.5)
+            data = await asyncio.wait_for(websocket.receive_json(), timeout=1)
         except asyncio.TimeoutError:
             if lobby_key and player_id:
                 await lobby_state_getter.reveal_player_cards(lobby_key, player_id, websocket, redis_handler)

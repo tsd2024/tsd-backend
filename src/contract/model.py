@@ -9,6 +9,7 @@ class ActionType(Enum):
     PLAY_CARD = "play_card"
     REVEAL = "reveal"
     CANCEL = "cancel"
+    NEXT_ROUND = "next_round"
 
 
 class Packet(BaseModel):

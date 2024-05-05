@@ -3,7 +3,8 @@ import json
 import redis
 
 from src.contract.exceptions import LobbyNotFoundException, CardNotAvailableException, PlayerNotFoundException, \
-    RevealNotReadyException, NotAdminException, CancelNotAvailableException
+    RevealNotReadyException, NotAdminException, CancelNotAvailableException, NextRoundNotReadyException, \
+    MaxRoundsReachedException
 
 
 class MaxPlayersReachedException(Exception):
@@ -173,6 +174,45 @@ class RedisHandler:
 
                 raise PlayerNotFoundException("Player not found in the lobby")
 
+            except redis.WatchError:
+                continue
+            finally:
+                pipe.unwatch()
+
+    def next_round(self, lobby_key, player_id):
+        pipe = self.redis_client.pipeline()
+        while True:
+            try:
+                pipe.watch(lobby_key)
+                lobby_data = pipe.get(lobby_key)
+                if not lobby_data:
+                    raise LobbyNotFoundException("Lobby not found")
+                lobby_data = json.loads(lobby_data.decode())
+                admin_id = lobby_data['lobby_metadata']['admin_id']
+                reveal_cards = lobby_data['lobby_metadata']['reveal_cards']
+                round_number = lobby_data['lobby_metadata']['round_number']
+                max_rounds = lobby_data['lobby_metadata']['number_of_rounds']
+                if player_id != admin_id:
+                    raise NotAdminException("Only admin can start next round")
+                players = lobby_data['players']
+                all_choices_made = all(player['choice_made'] for player in players)
+                if all_choices_made and reveal_cards and round_number < max_rounds:
+                    # Increase round number
+                    lobby_data['lobby_metadata']['round_number'] += 1
+                    # Set reveal_cards to False
+                    lobby_data['lobby_metadata']['reveal_cards'] = False
+                    # Reset choice_made for each player
+                    for player in players:
+                        player['choice_made'] = False
+                    pipe.multi()
+                    pipe.set(lobby_key, json.dumps(lobby_data))
+                    pipe.execute()
+                    return lobby_data
+                else:
+                    if round_number >= max_rounds:
+                        raise MaxRoundsReachedException("All rounds have been played")
+                    else:
+                        raise NextRoundNotReadyException("Not all players have made their choice")
             except redis.WatchError:
                 continue
             finally:
