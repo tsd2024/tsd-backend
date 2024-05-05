@@ -1,15 +1,27 @@
 from dependency_injector.wiring import Provide, inject
-from fastapi import Depends, APIRouter
+from fastapi import Depends, APIRouter, HTTPException
 
 from src.app.container import Container
 from src.app.request.update_story import UpdateStoryRequest
+from src.contract.exceptions import UserStoryNotFoundException, LobbyNotFoundException
 from src.contract.model import Story
 from src.usecase.stories_tickets.update_story import UpdateStoryUseCase
 
 api = APIRouter()
 
 
-@api.post("/update")
+@api.post(
+    "/update",
+    responses=
+    {
+        404: {
+            "description": "Lobby not found"
+        },
+        400: {
+            "description": "User story not found"
+        }
+    }
+)
 @inject
 async def update_story(
         request: UpdateStoryRequest,
@@ -21,7 +33,12 @@ async def update_story(
         story_points=0,
         tickets=request.tickets
     )
-    await use_case.execute(
-        lobby_id=request.lobby_id,
-        story=story
-    )
+    try:
+        await use_case.execute(
+            lobby_id=request.lobby_id,
+            story=story
+        )
+    except UserStoryNotFoundException as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except LobbyNotFoundException as e:
+        raise HTTPException(status_code=404, detail=str(e))
