@@ -16,5 +16,16 @@ def get_redis_record_template():
                 'choose_cards': [],
                 'choice_made': False,
             }
-        ]
+        ],
+        'user_stories': [
+        ],
+    }
+
+
+def get_user_story_template():
+    return {
+            'story_id': "",
+            'story_name': "",
+            'story_points': 0,
+            'tickets': [],
     }
