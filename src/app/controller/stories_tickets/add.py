@@ -15,7 +15,7 @@ api = APIRouter()
 @inject
 async def add_story(
         request: AddStoryRequest,
-        use_case: AddStoryUseCase = Depends(Provide(Container.add_stories_use_case))
+        use_case: AddStoryUseCase = Depends(Provide(Container.add_story_use_case))
 ) -> None:
     story = Story(
         story_id=str(uuid.uuid4()),

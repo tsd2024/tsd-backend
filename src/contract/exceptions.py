@@ -32,3 +32,6 @@ class MaxRoundsReachedException(Exception):
 
 class MaxUserStoriesReachedException(Exception):
     pass
+
+class UserStoryNotFoundException(Exception):
+    pass

@@ -6,6 +6,7 @@ from src.domain.ws_lobby_state.lobby_state_getter import LobbyStateGetter
 from src.domain.ws_packet_handler.packet_handler_factory import PacketHandlerFactory
 from src.usecase.create_lobby import CreateLobbyUseCase
 from src.usecase.stories_tickets.add_story import AddStoryUseCase
+from src.usecase.stories_tickets.update_story import UpdateStoryUseCase
 
 
 class Container(containers.DeclarativeContainer):
@@ -31,7 +32,12 @@ class Container(containers.DeclarativeContainer):
         redis_handler=redis_handler
     )
 
-    add_stories_use_case = providers.Singleton(
+    add_story_use_case = providers.Singleton(
         AddStoryUseCase,
+        redis_handler=redis_handler
+    )
+
+    update_story_use_case = providers.Singleton(
+        UpdateStoryUseCase,
         redis_handler=redis_handler
     )

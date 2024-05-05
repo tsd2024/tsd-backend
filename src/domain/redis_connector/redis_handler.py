@@ -4,7 +4,7 @@ import redis
 
 from src.contract.exceptions import LobbyNotFoundException, CardNotAvailableException, PlayerNotFoundException, \
     RevealNotReadyException, NotAdminException, CancelNotAvailableException, NextRoundNotReadyException, \
-    MaxRoundsReachedException, MaxUserStoriesReachedException
+    MaxRoundsReachedException, MaxUserStoriesReachedException, UserStoryNotFoundException
 
 
 class MaxPlayersReachedException(Exception):
@@ -238,6 +238,29 @@ class RedisHandler:
                     return lobby_data
                 else:
                     raise MaxUserStoriesReachedException("Maximum user stories reached")
+            except redis.WatchError:
+                continue
+            finally:
+                pipe.unwatch()
+
+    def update_user_story(self, lobby_key, updated_story):
+        pipe = self.redis_client.pipeline()
+        while True:
+            try:
+                pipe.watch(lobby_key)
+                lobby_data = pipe.get(lobby_key)
+                if not lobby_data:
+                    raise LobbyNotFoundException("Lobby not found")
+                lobby_data = json.loads(lobby_data.decode())
+                user_stories = lobby_data.get('user_stories', [])
+                for user_story in user_stories:
+                    if user_story['story_id'] == updated_story['story_id']:
+                        user_story.update(updated_story)
+                        pipe.multi()
+                        pipe.set(lobby_key, json.dumps(lobby_data))
+                        pipe.execute()
+                        return lobby_data
+                raise UserStoryNotFoundException(f"User story with ID {updated_story['story_id']} not found")
             except redis.WatchError:
                 continue
             finally:
