@@ -25,3 +25,15 @@ class BasicLobbyInfo(BaseModel):
     lobby_id: str
     lobby_name: str
     admin_id: str
+
+
+class Ticket(BaseModel):
+    ticket_id: str
+    ticket_name: str
+
+
+class Story(BaseModel):
+    story_id: str
+    story_name: str
+    story_description: str
+    tickets: list[Ticket]
