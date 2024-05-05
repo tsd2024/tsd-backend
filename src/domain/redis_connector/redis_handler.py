@@ -266,5 +266,28 @@ class RedisHandler:
             finally:
                 pipe.unwatch()
 
+    def delete_user_story(self, lobby_key, story_id):
+        pipe = self.redis_client.pipeline()
+        while True:
+            try:
+                pipe.watch(lobby_key)
+                lobby_data = pipe.get(lobby_key)
+                if not lobby_data:
+                    raise LobbyNotFoundException("Lobby not found")
+                lobby_data = json.loads(lobby_data.decode())
+                user_stories = lobby_data.get('user_stories', [])
+                for user_story in user_stories:
+                    if user_story['story_id'] == story_id:
+                        user_stories.remove(user_story)
+                        pipe.multi()
+                        pipe.set(lobby_key, json.dumps(lobby_data))
+                        pipe.execute()
+                        return lobby_data
+                raise UserStoryNotFoundException(f"User story with ID {story_id} not found")
+            except redis.WatchError:
+                continue
+            finally:
+                pipe.unwatch()
+
     def get_record(self, key):
         return self.redis_client.get(key)
