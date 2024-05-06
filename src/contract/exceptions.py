@@ -20,3 +20,18 @@ class NotAdminException(Exception):
 
 class CancelNotAvailableException(Exception):
     pass
+
+
+class NextRoundNotReadyException(Exception):
+    pass
+
+
+class MaxRoundsReachedException(Exception):
+    pass
+
+
+class MaxUserStoriesReachedException(Exception):
+    pass
+
+class UserStoryNotFoundException(Exception):
+    pass
