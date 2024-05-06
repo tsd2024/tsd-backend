@@ -29,7 +29,11 @@ def create_app():
     origins = [
         "https://localhost",
         "https://d359m7qsv8npm1.cloudfront.net/",
+        "https://d359m7qsv8npm1.cloudfront.net",
+        "d359m7qsv8npm1.cloudfront.net/",
+        "d359m7qsv8npm1.cloudfront.net",
         "http://d359m7qsv8npm1.cloudfront.net/",
+        "http://d359m7qsv8npm1.cloudfront.net",
         "http://localhost:3000",
     ]
 
