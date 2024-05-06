@@ -1,4 +1,3 @@
-import uuid
 from enum import Enum
 
 from pydantic import BaseModel
@@ -27,7 +26,6 @@ class BasicLobbyInfo(BaseModel):
     lobby_id: str
     lobby_name: str
     admin_id: str
-
 
 class Ticket(BaseModel):
     ticket_name: str
