@@ -94,6 +94,19 @@ class RedisHandler:
                 players = lobby_data['players']
                 all_choices_made = all(player['choice_made'] for player in players)
                 if all_choices_made:
+                    latest_cards = [player['choose_cards'][-1] for player in players]
+                    average_card = sum(latest_cards) / len(players)
+
+                    lobby_data['lobby_metadata']['results'].append(average_card)
+
+                    round_number = lobby_data['lobby_metadata']['round_number']
+                    user_stories = lobby_data.get('user_stories', [])
+
+                    if round_number <= len(user_stories):
+                        user_stories[round_number - 1]['story_points'] = int(average_card)
+
+                    lobby_data['user_stories'] = user_stories
+
                     lobby_data['lobby_metadata']['reveal_cards'] = True
                     pipe.multi()
                     pipe.set(lobby_key, json.dumps(lobby_data))
