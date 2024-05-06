@@ -1,11 +1,19 @@
 import csv
-from typing import List
+
 from fastapi import UploadFile
+from pydantic import BaseModel
+
 from src.contract.model import Story, Ticket
+from src.domain.redis_connector.redis_handler import RedisHandler
 
 
-class CsvImportUseCase:
-    async def execute(self, file: UploadFile) -> List[Story]:
+class CsvImportUseCase(BaseModel):
+    redis_handler: RedisHandler
+
+    class Config:
+        arbitrary_types_allowed = True
+
+    async def execute(self, lobby_key: str, file: UploadFile) -> None:
         file_content = await file.read()
         rows = list(csv.DictReader(file_content.decode().splitlines()))
 
@@ -22,4 +30,8 @@ class CsvImportUseCase:
                 if parent_story:
                     parent_story.tickets.append(ticket)
 
-        return list(stories.values())
+        for story in stories.values():
+            try:
+                self.redis_handler.add_user_story(lobby_key, story.dict())
+            except Exception as e:
+                break
