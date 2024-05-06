@@ -15,6 +15,7 @@ def get_redis_record_template():
                 'player_id': None,
                 'choose_cards': [],
                 'choice_made': False,
+                'round_number': 1,
             }
         ],
         'user_stories': [

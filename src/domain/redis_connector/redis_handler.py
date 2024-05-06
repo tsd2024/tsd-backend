@@ -42,6 +42,7 @@ class RedisHandler:
                     'player_id': player_id,
                     'choose_cards': [],
                     'choice_made': False,
+                    'round_number': 1
                 })
                 pipe.multi()
                 pipe.set(lobby_key, json.dumps(lobby_data))
@@ -290,6 +291,35 @@ class RedisHandler:
                         pipe.execute()
                         return lobby_data
                 raise UserStoryNotFoundException(f"User story with ID {story_id} not found")
+            except redis.WatchError:
+                continue
+            finally:
+                pipe.unwatch()
+
+    def sync_player_round_number(self, lobby_key, player_id):
+        pipe = self.redis_client.pipeline()
+        while True:
+            try:
+                pipe.watch(lobby_key)
+                lobby_data = pipe.get(lobby_key)
+                if not lobby_data:
+                    raise LobbyNotFoundException("Lobby not found")
+                lobby_data = json.loads(lobby_data.decode())
+                lobby_round_number = lobby_data['lobby_metadata']['round_number']
+                admin_id = lobby_data['lobby_metadata']['admin_id']
+                players = lobby_data['players']
+                for player in players:
+                    if player['player_id'] == player_id and player_id != admin_id:
+                        player_round_number = player.get('round_number', 1)
+                        if lobby_round_number > player_round_number:
+                            player['round_number'] = lobby_round_number
+                            pipe.multi()
+                            pipe.set(lobby_key, json.dumps(lobby_data))
+                            pipe.execute()
+                            return True
+                        else:
+                            return False
+                raise PlayerNotFoundException(f"Player with ID {player_id} not found in the lobby")
             except redis.WatchError:
                 continue
             finally:
