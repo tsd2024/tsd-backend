@@ -123,7 +123,9 @@ class RedisHandler:
 
                 num_players = len(players)
 
-                current_user_story_id = user_stories[round_number - 1]['story_id'] if user_stories else None
+                current_user_story_id = None
+                if user_stories and round_number <= len(user_stories):
+                    current_user_story_id = user_stories[round_number - 1]['story_id'] if user_stories else None
 
                 game_status = {
                     'num_players': num_players,
