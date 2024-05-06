@@ -27,5 +27,5 @@ class ExportCsvFile:
                 for ticket in story.get('tickets', []):
                     ticket_name = ticket.get('ticket_name', '')
                     ticket_id = str(uuid.uuid4())
-                    writer.writerow([ticket_name, ticket_id, 'Pozadanie', '', story_name])
+                    writer.writerow([ticket_name, ticket_id, 'Subtask', '', story_id])
         return file_path
