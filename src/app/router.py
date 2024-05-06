@@ -6,6 +6,7 @@ from src.app.controller.stories_tickets.add import api as add_stories_tickets_ap
 from src.app.controller.stories_tickets.update import api as update_stories_tickets_api
 from src.app.controller.stories_tickets.delete import api as delete_stories_tickets_api
 
+from src.app.controller.csv_import import api as csv_import_api
 
 
 def user_story_router() -> APIRouter:
@@ -21,6 +22,7 @@ def _v1() -> APIRouter:
     api.include_router(websocket_api)
     api.include_router(create_lobby_api)
     api.include_router(user_story_router())
+    api.include_router(csv_import_api)
     return api
 
 

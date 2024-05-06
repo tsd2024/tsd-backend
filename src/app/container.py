@@ -5,6 +5,7 @@ from src.domain.redis_connector.redis_handler import RedisHandler
 from src.domain.ws_lobby_state.lobby_state_getter import LobbyStateGetter
 from src.domain.ws_packet_handler.packet_handler_factory import PacketHandlerFactory
 from src.usecase.create_lobby import CreateLobbyUseCase
+from src.usecase.csv_import import CsvImportUseCase
 from src.usecase.stories_tickets.add_story import AddStoryUseCase
 from src.usecase.stories_tickets.delete_story import DeleteStoryUseCase
 from src.usecase.stories_tickets.update_story import UpdateStoryUseCase
@@ -45,5 +46,10 @@ class Container(containers.DeclarativeContainer):
 
     delete_story_use_case = providers.Singleton(
         DeleteStoryUseCase,
+        redis_handler=redis_handler
+    )
+
+    csv_import_use_case = providers.Singleton(
+        CsvImportUseCase,
         redis_handler=redis_handler
     )
