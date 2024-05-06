@@ -9,6 +9,7 @@ from src.usecase.csv_import import CsvImportUseCase
 from src.usecase.stories_tickets.add_story import AddStoryUseCase
 from src.usecase.stories_tickets.delete_story import DeleteStoryUseCase
 from src.usecase.stories_tickets.update_story import UpdateStoryUseCase
+from src.usecase.csv_export.export_csv_file import ExportCsvFile
 
 
 class Container(containers.DeclarativeContainer):
@@ -51,5 +52,10 @@ class Container(containers.DeclarativeContainer):
 
     csv_import_use_case = providers.Singleton(
         CsvImportUseCase,
+        redis_handler=redis_handler
+    )
+
+    export_csv_file = providers.Singleton(
+        ExportCsvFile,
         redis_handler=redis_handler
     )

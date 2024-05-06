@@ -5,6 +5,7 @@ from src.app.controller.create_lobby import api as create_lobby_api
 from src.app.controller.stories_tickets.add import api as add_stories_tickets_api
 from src.app.controller.stories_tickets.update import api as update_stories_tickets_api
 from src.app.controller.stories_tickets.delete import api as delete_stories_tickets_api
+from src.app.controller.csv_file_export import api as csv_file_export_api
 
 from src.app.controller.csv_import import api as csv_import_api
 
@@ -14,6 +15,7 @@ def user_story_router() -> APIRouter:
     api.include_router(add_stories_tickets_api)
     api.include_router(update_stories_tickets_api)
     api.include_router(delete_stories_tickets_api)
+    api.include_router(csv_file_export_api)
     return api
 
 def _v1() -> APIRouter:
