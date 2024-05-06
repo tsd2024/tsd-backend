@@ -15,6 +15,18 @@ def get_redis_record_template():
                 'player_id': None,
                 'choose_cards': [],
                 'choice_made': False,
+                'round_number': 1,
             }
-        ]
+        ],
+        'user_stories': [
+        ],
+    }
+
+
+def get_user_story_template():
+    return {
+            'story_id': "",
+            'story_name': "",
+            'story_points': 0,
+            'tickets': [],
     }
