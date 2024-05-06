@@ -12,7 +12,8 @@ class ExportCsvFile:
         user_stories = lobby_status.get('user_stories', [])
 
         file_name = f'{lobby_id}.csv'
-        file_path = os.path.join('csvfiles', file_name)
+        csfiles_directory = "/run/src/app/csvfiles"
+        file_path = os.path.join(csfiles_directory, file_name)
         with open(file_path, mode='w', newline='') as file:
             writer = csv.writer(file)
             writer.writerow(['Summary', 'Issue id', 'Issue Type', 'Custom field (Story point estimate)',
