@@ -4,6 +4,7 @@ from fastapi import Depends, APIRouter, HTTPException
 from src.app.container import Container
 from src.app.request.delete_story import DeleteStoryRequest
 from src.contract.exceptions import UserStoryNotFoundException, LobbyNotFoundException
+from src.domain.google_auth.token_verifier_request import verify_token
 from src.usecase.stories_tickets.delete_story import DeleteStoryUseCase
 
 api = APIRouter()
@@ -24,7 +25,8 @@ api = APIRouter()
 @inject
 async def delete_story(
         request: DeleteStoryRequest,
-        use_case: DeleteStoryUseCase = Depends(Provide(Container.delete_story_use_case))
+        use_case: DeleteStoryUseCase = Depends(Provide(Container.delete_story_use_case)),
+        user_info: dict = Depends(verify_token)
 ) -> None:
     try:
         await use_case.execute(

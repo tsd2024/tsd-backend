@@ -6,7 +6,7 @@ from src.contract.exceptions import MissingTokenException, InvalidTokenException
 
 CLIENT_ID = "50333286952-cn2jg51pihob9a8t22scs03a3gvtkpn3.apps.googleusercontent.com"
 def verify_token(websocket: WebSocket):
-    token = websocket.headers.get("Authorization", "").replace("Bearer ", "")
+    token = websocket.query_params.get("token", "")
     if token == "":
         raise MissingTokenException("Token is missing")
     try:
