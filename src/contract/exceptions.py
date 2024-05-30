@@ -26,3 +26,17 @@ class MissingTokenException(Exception):
 
 class InvalidTokenException(Exception):
     pass
+
+class NextRoundNotReadyException(Exception):
+    pass
+
+
+class MaxRoundsReachedException(Exception):
+    pass
+
+
+class MaxUserStoriesReachedException(Exception):
+    pass
+
+class UserStoryNotFoundException(Exception):
+    pass
