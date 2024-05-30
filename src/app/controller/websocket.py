@@ -7,7 +7,6 @@ from src.app.container import Container
 from src.contract.model import ActionType, Packet
 from src.contract.exceptions import InvalidTokenException, MissingTokenException
 from src.domain.ws_packet_handler.packet_handler_factory import PacketHandlerFactory
-from src.app.middleware.google_validation import google_token_validation
 
 api = APIRouter()
 
@@ -18,11 +17,13 @@ async def websocket_endpoint(
         websocket: WebSocket,
         packet_handler_factory: PacketHandlerFactory = Depends(Provide(Container.packet_handler_factory)),
         redis_handler=Depends(Provide(Container.redis_handler)),
-        lobby_state_getter=Depends(Provide(Container.lobby_state_getter))
+        lobby_state_getter=Depends(Provide(Container.lobby_state_getter)),
+        token_verifier=Depends(Provide(Container.token_verifier))
 ):
     await websocket.accept()
     try:
-        user_info = google_token_validation(websocket)
+        token = websocket.query_params.get("token", "")
+        user_info = token_verifier.verify_token(token)
     except (InvalidTokenException, MissingTokenException) as e:
         await websocket.send_text(str(e))
         await websocket.close()
