@@ -14,6 +14,7 @@ def get_redis_record_template():
         'players': [
             {
                 'player_id': None,
+                'player_name': None,
                 'choose_cards': [],
                 'choice_made': False,
                 'round_number': 1,
