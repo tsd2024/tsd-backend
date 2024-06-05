@@ -1,6 +1,8 @@
 from dependency_injector import containers, providers
 
 from src.database.database import Database
+from src.database.repository.user_repository import UserRepository
+from src.domain.google_auth.token_verifier_websocket import TokenVerifier
 from src.domain.redis_connector.redis_handler import RedisHandler
 from src.domain.ws_lobby_state.lobby_state_getter import LobbyStateGetter
 from src.domain.ws_packet_handler.packet_handler_factory import PacketHandlerFactory
@@ -58,4 +60,14 @@ class Container(containers.DeclarativeContainer):
     export_csv_file = providers.Singleton(
         ExportCsvFile,
         redis_handler=redis_handler
+    )
+
+    user_repository = providers.Singleton(
+        UserRepository,
+        session_factory=database.provided.session
+    )
+
+    token_verifier = providers.Singleton(
+        TokenVerifier,
+        user_repository=user_repository
     )

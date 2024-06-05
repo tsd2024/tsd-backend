@@ -9,6 +9,8 @@ from src.contract.exceptions import LobbyNotFoundException, MaxUserStoriesReache
 from src.contract.model import Story
 from src.usecase.stories_tickets.add_story import AddStoryUseCase
 
+from src.domain.google_auth.token_verifier_request import verify_token
+
 api = APIRouter()
 
 
@@ -27,7 +29,8 @@ api = APIRouter()
 @inject
 async def add_story(
         request: AddStoryRequest,
-        use_case: AddStoryUseCase = Depends(Provide(Container.add_story_use_case))
+        use_case: AddStoryUseCase = Depends(Provide(Container.add_story_use_case)),
+        user_info: dict = Depends(verify_token)
 ) -> None:
     story = Story(
         story_id=str(uuid.uuid4()),

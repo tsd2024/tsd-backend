@@ -23,10 +23,12 @@ asyncpg==0.29.0
     # via -r /run/requirements.in
 asynctest==0.13.0
     # via -r /run/requirements.in
+cachetools==5.3.3
+    # via google-auth
 certifi==2024.2.2
-    # via
-    #   httpcore
-    #   httpx
+    # via requests
+charset-normalizer==3.3.2
+    # via requests
 click==8.1.7
     # via
     #   typer
@@ -45,10 +47,12 @@ exceptiongroup==1.2.1
     #   pytest
 executing==2.0.1
     # via devtools
-fastapi==0.111.0
-    # via
-    #   -r /run/requirements.in
-    #   fastapi-cli
+fastapi==0.110.1
+    # via -r /run/requirements.in
+google-auth==2.6.0
+    # via -r /run/requirements.in
+google-auth-oauthlib==0.4.6
+
 fastapi-cli==0.0.2
     # via fastapi
 greenlet==3.0.3
@@ -92,6 +96,12 @@ pluggy==1.5.0
     # via pytest
 psycopg2==2.9.9
     # via -r /run/requirements.in
+pyasn1==0.6.0
+    # via
+    #   pyasn1-modules
+    #   rsa
+pyasn1-modules==0.4.0
+    # via google-auth
 pydantic==2.7.1
     # via
     #   fastapi
@@ -127,6 +137,10 @@ python-multipart==0.0.9
     #   fastapi
 pyyaml==6.0.1
     # via uvicorn
+requests==2.31.0
+    # via -r /run/requirements.in
+rsa==4.9
+    # via google-auth
 redis==5.0.4
     # via -r /run/requirements.in
 rich==13.7.1
@@ -166,6 +180,8 @@ typing-extensions==4.11.0
     #   sqlalchemy
     #   typer
     #   uvicorn
+urllib3==2.2.1
+    # via requests
 ujson==5.9.0
     # via fastapi
 uvicorn[standard]==0.29.0
