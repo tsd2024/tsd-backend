@@ -48,6 +48,7 @@ class CreateHandler(PacketHandler):
         value['lobby_metadata']['lobby_name'] = lobby_name
 
         admin_id = packet.value.get('admin_id', None)
+        admin_name = packet.value.get('admin_name', None)
         if admin_id is None:
             await websocket.send_json({
                 "action": "create_failed",
@@ -56,16 +57,19 @@ class CreateHandler(PacketHandler):
             return
         value['lobby_metadata']['admin_id'] = admin_id
         value['players'][0]['player_id'] = admin_id
+        value['players'][0]['player_name'] = admin_name
 
         redis_handler.upload_record(str(lobby_key), value)
         await websocket.send_json({
             "action": "create",
             "lobby_id": str(lobby_key),
             "lobby_name": lobby_name,
-            "admin_id": str(admin_id)
+            "admin_id": str(admin_id),
+            "admin_name": admin_name
         })
         return Player(
             player_id=str(admin_id),
+            player_name=str(admin_name),
             lobby_key=lobby_key
         )
 

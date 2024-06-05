@@ -20,7 +20,7 @@ class RedisHandler:
         json_template = json.dumps(value)
         self.redis_client.set(key, json_template)
 
-    def join_lobby(self, lobby_key, player_id):
+    def join_lobby(self, lobby_key, player_id, player_name):
         pipe = self.redis_client.pipeline()
         while True:
             try:
@@ -40,6 +40,7 @@ class RedisHandler:
                     raise MaxPlayersReachedException("Lobby is full")
                 players.append({
                     'player_id': player_id,
+                    'player_name': player_name,
                     'choose_cards': [],
                     'choice_made': False,
                     'round_number': 1
@@ -155,12 +156,14 @@ class RedisHandler:
                     if reveal_cards:
                         player_info = {
                             'player_id': player['player_id'],
+                            'player_name': player['player_name'],
                             'card': player['choose_cards'][-1],
                             'ready': True
                         }
                     else:
                         player_info = {
                             'player_id': player['player_id'],
+                            'player_name': player['player_name'],
                             'card': None,
                             'ready': True if player['choice_made'] else False
                         }
