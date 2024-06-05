@@ -14,3 +14,8 @@ class DummyModel(Base):
     __tablename__ = "dummy"
     id = Column(Integer, primary_key=True)
     name = Column(String)
+
+class DatabaseUser(Base):
+    __tablename__ = "users"
+    email = Column(String, primary_key=True)
+    name = Column(String, nullable=False)

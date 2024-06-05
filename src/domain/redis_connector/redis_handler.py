@@ -147,7 +147,8 @@ class RedisHandler:
                     'number_of_rounds': number_of_rounds,
                     'current_user_story_id': current_user_story_id,
                     'players': [],
-                    'user_stories': user_stories
+                    'user_stories': user_stories,
+                    "admin_id": lobby_data['lobby_metadata']['admin_id']
                 }
 
                 for player in players:
