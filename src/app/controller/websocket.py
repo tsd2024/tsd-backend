@@ -18,17 +18,17 @@ async def websocket_endpoint(
         packet_handler_factory: PacketHandlerFactory = Depends(Provide(Container.packet_handler_factory)),
         redis_handler=Depends(Provide(Container.redis_handler)),
         lobby_state_getter=Depends(Provide(Container.lobby_state_getter)),
-        token_verifier=Depends(Provide(Container.token_verifier))
+        token_verifier=Depends(Provide(Container.token_verifier)),
+        history_saver=Depends(Provide(Container.history_saver))
 ):
     await websocket.accept()
-    try:
-        token = websocket.query_params.get("token", "")
-        user_info = token_verifier.verify_token(token)
-    except (InvalidTokenException, MissingTokenException) as e:
-        await websocket.send_text(str(e))
-        await websocket.close()
-        return
-    print(f"User info: {user_info}")
+    # try:
+    #     token = websocket.query_params.get("token", "")
+    #     user_info = token_verifier.verify_token(token)
+    # except (InvalidTokenException, MissingTokenException) as e:
+    #     await websocket.send_text(str(e))
+    #     await websocket.close()
+    #     return
     lobby_key = None
     player_id = None
     while True:
@@ -49,5 +49,6 @@ async def websocket_endpoint(
                 player_id = player.player_id
         else:
             await handler.handle_packet(packet, websocket, redis_handler)
+        await history_saver.save_lobby_history(lobby_key, player_id, redis_handler)
 
 
