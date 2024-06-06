@@ -36,12 +36,19 @@
             };
         });
     </script>
+    <style>
+        #valueInput {
+            width: 100%; /* Makes the textarea take the full width of its container */
+            height: 100px; /* Adjust the height as needed */
+            resize: vertical; /* Allows the user to resize the height */
+        }
+    </style>
 </head>
 <body>
     <h2>WebSocket Message Sender</h2>
     <form id="messageForm">
         <input type="text" id="actionInput" placeholder="Action" required>
-        <input type="text" id="valueInput" placeholder="Value" required>
+        <textarea id="valueInput" placeholder="Value" required></textarea>
         <button type="submit">Send Message</button>
     </form>
 </body>
