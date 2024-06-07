@@ -13,7 +13,7 @@ class LobbyHistoryRepository(BaseModel):
                 .filter((DatabaseLobbyHistory.lobby_id == lobby_id) & (DatabaseLobbyHistory.player_id == player_id)) \
                 .first()
             if lobby_history:
-                lobby_history.lobby_metadata = lobby_metadata
+                lobby_history.lobby_metadata = str(lobby_metadata)
             else:
                 lobby_history = DatabaseLobbyHistory(lobby_id=lobby_id, player_id=player_id,
                                                      lobby_metadata=str(lobby_metadata))
