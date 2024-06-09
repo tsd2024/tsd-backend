@@ -1,5 +1,5 @@
 import json
-
+import statistics
 import redis
 
 from src.contract.exceptions import LobbyNotFoundException, CardNotAvailableException, PlayerNotFoundException, \
@@ -96,7 +96,7 @@ class RedisHandler:
                 all_choices_made = all(player['choice_made'] for player in players)
                 if all_choices_made:
                     latest_cards = [player['choose_cards'][-1] for player in players]
-                    average_card = sum(latest_cards) / len(players)
+                    average_card = statistics.median(latest_cards)
 
                     lobby_data['lobby_metadata']['results'].append(average_card)
 
