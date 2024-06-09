@@ -1,12 +1,15 @@
-from src.domain.redis_connector.redis_handler import RedisHandler
 import csv
-import uuid
 import os
+import uuid
+
+from src.domain.redis_connector.redis_handler import RedisHandler
+
 
 class ExportCsvFile:
 
     def __init__(self, redis_handler: RedisHandler):
         self.redis_handler = redis_handler
+
     def export(self, lobby_id: str, redis_handler: RedisHandler):
         lobby_status = redis_handler.get_lobby_status(lobby_id)
         user_stories = lobby_status.get('user_stories', [])

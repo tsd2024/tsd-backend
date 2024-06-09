@@ -1,7 +1,7 @@
 import csv
 
 from fastapi import UploadFile
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from src.contract.model import Story, Ticket
 from src.domain.redis_connector.redis_handler import RedisHandler
@@ -10,8 +10,9 @@ from src.domain.redis_connector.redis_handler import RedisHandler
 class CsvImportUseCase(BaseModel):
     redis_handler: RedisHandler
 
-    class Config:
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(
+        arbitrary_types_allowed=True
+    )
 
     async def execute(self, lobby_key: str, file: UploadFile) -> None:
         file_content = await file.read()
@@ -32,6 +33,6 @@ class CsvImportUseCase(BaseModel):
 
         for story in stories.values():
             try:
-                self.redis_handler.add_user_story(lobby_key, story.dict())
+                self.redis_handler.add_user_story(lobby_key, story.model_dump())
             except Exception as e:
                 break

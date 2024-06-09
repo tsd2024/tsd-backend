@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from src.contract.model import BasicLobbyInfo
 from src.domain.redis_connector.record import get_redis_record_template
@@ -9,8 +9,10 @@ from src.domain.utils import generate_unique_id
 class CreateLobbyUseCase(BaseModel):
     redis_handler: RedisHandler
 
-    class Config:
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(
+        arbitrary_types_allowed=True
+    )
+
     async def execute(self, admin_id: str, lobby_name: str, max_players: int, number_of_rounds: int) -> BasicLobbyInfo:
         lobby_key = generate_unique_id()
 
