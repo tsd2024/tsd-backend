@@ -1,0 +1,27 @@
+name: Test
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+  
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Build and run container"
+        run: docker-compose up -d --build
+
+      - name: "Sleep for 30 seconds"
+        uses: jakejarvis/wait-action@master
+        with:
+          time: '30s'
+
+      - name: "Run tests"
+        run: docker-compose exec -T fastapi pytest
+
+      - name: "Stop containers"
+        run: docker-compose down
+          
