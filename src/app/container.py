@@ -1,13 +1,16 @@
 from dependency_injector import containers, providers
 
 from src.database.database import Database
+from src.database.repository.lobby_history_repository import LobbyHistoryRepository
 from src.database.repository.user_repository import UserRepository
 from src.domain.google_auth.token_verifier_websocket import TokenVerifier
+from src.domain.history_saver import HistorySaver
 from src.domain.redis_connector.redis_handler import RedisHandler
 from src.domain.ws_lobby_state.lobby_state_getter import LobbyStateGetter
 from src.domain.ws_packet_handler.packet_handler_factory import PacketHandlerFactory
 from src.usecase.create_lobby import CreateLobbyUseCase
 from src.usecase.csv_import import CsvImportUseCase
+from src.usecase.get_lobby_history import LobbyHistoryUseCase
 from src.usecase.stories_tickets.add_story import AddStoryUseCase
 from src.usecase.stories_tickets.delete_story import DeleteStoryUseCase
 from src.usecase.stories_tickets.update_story import UpdateStoryUseCase
@@ -65,6 +68,21 @@ class Container(containers.DeclarativeContainer):
     user_repository = providers.Singleton(
         UserRepository,
         session_factory=database.provided.session
+    )
+
+    lobby_history_repository = providers.Singleton(
+        LobbyHistoryRepository,
+        session_factory=database.provided.session
+    )
+
+    history_saver = providers.Singleton(
+        HistorySaver,
+        lobby_history_repository=lobby_history_repository
+    )
+
+    lobby_history_use_case = providers.Singleton(
+        LobbyHistoryUseCase,
+        lobby_history_repository=lobby_history_repository
     )
 
     token_verifier = providers.Singleton(
