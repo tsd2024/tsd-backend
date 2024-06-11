@@ -1,0 +1,35 @@
+name: Test
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+  
+env:
+  APP_NAME: tsd-backend
+  DATABASE_URL: 'postgresql://postgres:secret@postgres/postgres'
+  POSTGRES_PASSWORD: secret
+  REDIS_CONNECTION_STRING: 'redis://redis:6379/0'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Checkout source code"
+        uses: actions/checkout@v2
+
+      - name: "Build and run container"
+        run: docker-compose up -d --build
+
+      - name: "Sleep for 30 seconds"
+        uses: jakejarvis/wait-action@master
+        with:
+          time: '30s'
+
+      - name: "Run tests"
+        run: docker-compose exec -T fastapi pytest
+
+      - name: "Stop containers"
+        run: docker-compose down
+          
