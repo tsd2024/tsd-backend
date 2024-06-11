@@ -2,9 +2,8 @@ name: Test
 on:
   pull_request:
     branches:
-      - main
       - develop
-  
+
 env:
   APP_NAME: tsd-backend
   DATABASE_URL: 'postgresql://postgres:secret@postgres/postgres'
@@ -32,4 +31,3 @@ jobs:
 
       - name: "Stop containers"
         run: docker-compose down
-          
